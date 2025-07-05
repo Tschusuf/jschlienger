@@ -1,11 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Josef Schlienger</title>
-</head>
-<body>
-  <h1>Hallo, ich bin Josef</h1>
-  <p>Willkommen auf meiner persönlichen Website!</p>
-</body>
-</html>
+<canvas id="balanceChart" width="600" height="400"></canvas>
+<script>
+async function plotBalance() {
+  const response = await fetch('balance.csv');
+  const text = await response.text();
+  const lines = text.trim().split('\n').slice(1);
+
+  const labels = [], data = [];
+  lines.forEach(line => {
+    const [timestamp, balance] = line.split(',');
+    labels.push(timestamp);
+    data.push(parseFloat(balance));
+  });
+
+  new Chart(document.getElementById('balanceChart'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Bot Account Balance',
+        data: data,
+        borderColor: 'green',
+        borderWidth: 2,
+        fill: false
+      }]
+    }
+  });
+}
+plotBalance();
+</script>
